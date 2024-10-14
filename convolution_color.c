@@ -206,7 +206,7 @@ int main() {
     printf("test6\n");
     fflush(stdout);
 
-    nb_conv(p_new, p_temp, 0, ker2, TAILLEK, 16);
+    nb_conv(p_new, p_temp, 1, ker2, TAILLEK, 16);
     eisofhn2Es = fopen(strout2, "w");
     fprintf(eisofhn2Es, "P3\n");
     fprintf(eisofhn2Es, "%d %d\n", width, height);
