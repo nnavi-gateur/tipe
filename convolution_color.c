@@ -135,8 +135,7 @@ void test(int **matr, int **matg, int **matb, int height, int width) {
 }
 
 int main() {
-		char vide[256] = "";
-		char str[12];
+		char str[256];
 		char strout[256];
 		char strout2[256];
 		char temp[5];
@@ -151,23 +150,18 @@ int main() {
 		final_results = fopen("img_res/val_final","w");
 
 		for (int i = 0; i < 12; i++) {
-				strcpy(strout,vide);
-				strcat(strout,"img_res/");
 				sprintf(temp, "%d", i);
-				sprintf(str, "%d", i);
-				strcat(strout,temp);
-				strcat(str, ".ppm");
-				strcpy(strout2,strout);
-				strcat(strout, "-out.ppm");
-				strcat(strout2, "-out-final.ppm");
-				printf("%s\n",strout);
-				fflush(stdout);
-				stream = fopen(str, "rwo");
-
-				if (stream == NULL) {
-						printf("Erreur : impossible d'ouvrir le fichier '%s'.\n", str);
-						return 1;
-				}
+				sprintf(str, "assets/%s.ppm", temp);
+				sprintf(strout, "img_res/%s-out.ppm", temp);
+				sprintf(strout2, "img_res/%s-out-final.ppm", temp);
+    			printf("%s\n", strout);
+    			printf("%s\n", str);
+    			fflush(stdout);
+    			stream = fopen(str, "rwo");
+    			if (stream == NULL) {
+      				printf("Erreur : impossible d'ouvrir le fichier '%s'.\n", str);
+      				return 1;
+    			}
 
 				fscanf(stream, "P6\n %d %d\n %d", &width, &height, &max_colour);
 				printf("test\n");
@@ -245,6 +239,8 @@ int main() {
 		fclose (sol_coul_aft);
 		fclose(final_results);
 
+		free_mat(ker, TAILLEK);
+		free_mat(ker2, TAILLEK2);
 		unsigned long secondes = (unsigned long) difftime( end, begin );
 		printf( "Finished in %ld sec\n", secondes );  
 		return 0;
