@@ -48,20 +48,26 @@ void free_pixel(pixel *p) {
   free_mat(p->matg, p->height);
   free(p);
 }
-void convolution2(int **test, int **t, int height, int width,int** ker,int taillek,int divise) {
+void convolution2(int **test, int **t, int height, int width, int **ker,
+                  int taillek, int divise) {
   // printf("%d\n", 1);
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      t[i][j] = completer_case_rogner(i, j, test, height, width,ker,taillek,divise);
+      t[i][j] = completer_case_rogner(i, j, test, height, width, ker, taillek,
+                                      divise);
     }
   }
 }
 
-void convolution(pixel* p_norm,pixel* p_temp,int** ker,int taillek,int divise) {
-  convolution2(p_norm->matr,p_temp->matr, p_norm->height, p_norm->width,ker,taillek,divise);
-  convolution2(p_norm->matb, p_temp->matb, p_norm->height, p_norm->width,ker,taillek,divise);
-  convolution2(p_norm->matg, p_temp->matg, p_norm->height, p_norm->width,ker,taillek,divise);
+void convolution(pixel *p_norm, pixel *p_temp, int **ker, int taillek,
+                 int divise) {
+  convolution2(p_norm->matr, p_temp->matr, p_norm->height, p_norm->width, ker,
+               taillek, divise);
+  convolution2(p_norm->matb, p_temp->matb, p_norm->height, p_norm->width, ker,
+               taillek, divise);
+  convolution2(p_norm->matg, p_temp->matg, p_norm->height, p_norm->width, ker,
+               taillek, divise);
 }
 
 void recup_image_color(pixel *p) {
@@ -88,14 +94,14 @@ void recup_image_color(pixel *p) {
   }
 }
 
-double moyenne_coul_img (int ** mat,int height,int width){
-  double sol= 0;for (int i = 0; i < height; i++) {
+double moyenne_coul_img(int **mat, int height, int width) {
+  double sol = 0;
+  for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      sol +=+ mat[i][j];
+      sol += +mat[i][j];
     }
   }
-  return (sol/((double) (height * width)));
-
+  return (sol / ((double)(height * width)));
 }
 void copier_mat(int **old, int **new, int height, int width) {
   for (int i = 0; i < height; i++) {
@@ -105,7 +111,7 @@ void copier_mat(int **old, int **new, int height, int width) {
   }
 }
 
-void print_canvas2(FILE *fa,pixel* p) {
+void print_canvas2(FILE *fa, pixel *p) {
   int width = p->width;
   int height = p->height;
   for (int j = 0; j < height; j++) {
@@ -120,9 +126,10 @@ void print_canvas2(FILE *fa,pixel* p) {
   }
 }
 
-void nb_conv(pixel *p_norm, pixel *p_temp, int j,int** ker,int taillek,int divise) {
+void nb_conv(pixel *p_norm, pixel *p_temp, int j, int **ker, int taillek,
+             int divise) {
   for (int i = 0; i < j; i++) {
-    convolution(p_norm, p_temp, ker, taillek,divise);
+    convolution(p_norm, p_temp, ker, taillek, divise);
     copier_mat(p_temp->matb, p_norm->matb, p_norm->height, p_norm->width);
     copier_mat(p_temp->matg, p_norm->matg, p_norm->height, p_norm->width);
     copier_mat(p_temp->matr, p_norm->matr, p_norm->height, p_norm->width);
@@ -139,32 +146,34 @@ void test(int **matr, int **matg, int **matb, int height, int width) {
 }
 
 int main() {
-  char vide[256]= "";
-    char str[12];
-    char strout[256];
-    char strout2[256];
-    char temp[5];
-  time_t begin = time( NULL );
-  int** ker=fill_ker(TAILLEK);
-  int** ker2 =fill_ker2(TAILLEK2);
+  char vide[256] = "";
+  char str[12];
+  char strout[256];
+  char strout2[256];
+  char temp[5];
+  time_t begin = time(NULL);
+  int **ker = fill_ker(TAILLEK);
+  int **ker2 = fill_ker2(TAILLEK2);
   int width;
   int height;
   int max_colour;
-  sol_coul= fopen("img_res/val_couleurs_imgs","w");
-  sol_coul_aft= fopen("img_res/val_couleurs_imgs_conv","w");
-  final_results = fopen("img_res/val_final","w");
+  sol_coul = fopen("img_res/val_couleurs_imgs", "w");
+  sol_coul_aft = fopen("img_res/val_couleurs_imgs_conv", "w");
+  final_results = fopen("img_res/val_final", "w");
 
   for (int i = 0; i < 12; i++) {
-    strcpy(strout,vide);
-    strcat(strout,"img_res/");
+    strcpy(strout, vide);
+    strcpy(str, vide);
+    strcat(str, "assets/");
+    strcat(strout, "img_res/");
     sprintf(temp, "%d", i);
-    sprintf(str, "%d", i);
-    strcat(strout,temp);
+    strcat(strout, temp);
+    strcat(str, temp);
     strcat(str, ".ppm");
-    strcpy(strout2,strout);
+    strcpy(strout2, strout);
     strcat(strout, "-out.ppm");
     strcat(strout2, "-out-final.ppm");
-    printf("%s\n",strout);
+    printf("%s\n", strout);
     fflush(stdout);
     stream = fopen(str, "rwo");
     if (stream == NULL) {
@@ -185,51 +194,57 @@ int main() {
     copier_mat(p_old->matg, p_new->matg, p_old->height, p_old->width);
     printf("test3\n");
     fflush(stdout);
-    fprintf( sol_coul,"mat n°%d | r: %f | g: %f | b: %f\n",i,moyenne_coul_img(p_old->matr,  height,  width),
-    moyenne_coul_img(p_old->matg,  height,  width),moyenne_coul_img(p_old->matb,  height,  width));
+    fprintf(sol_coul, "mat n°%d | r: %f | g: %f | b: %f\n", i,
+            moyenne_coul_img(p_old->matr, height, width),
+            moyenne_coul_img(p_old->matg, height, width),
+            moyenne_coul_img(p_old->matb, height, width));
     eisofhns = fopen(strout, "w");
     fprintf(eisofhns, "P3\n");
     fprintf(eisofhns, "%d %d\n", width, height);
     fprintf(eisofhns, "255");
     fprintf(eisofhns, "\n");
-    nb_conv(p_new,p_temp, 1,ker,TAILLEK,9);
+    nb_conv(p_new, p_temp, 1, ker, TAILLEK, 9);
     printf("test4\n");
     fflush(stdout);
-    print_canvas2(eisofhns, p_new );
+    print_canvas2(eisofhns, p_new);
     printf("test5\n");
     fflush(stdout);
     fclose(eisofhns);
-    fprintf( sol_coul_aft,"mat n°%d | r: %f | g: %f | b: %f",i,moyenne_coul_img(p_new->matr,  height,  width),
-    moyenne_coul_img(p_new->matg,  height,  width),moyenne_coul_img(p_new->matb,  height,  width));
-    double prem = critere(p_old,p_new);
-    fprintf(sol_coul_aft," pertes -> %f\n",prem);
+    fprintf(sol_coul_aft, "mat n°%d | r: %f | g: %f | b: %f", i,
+            moyenne_coul_img(p_new->matr, height, width),
+            moyenne_coul_img(p_new->matg, height, width),
+            moyenne_coul_img(p_new->matb, height, width));
+    double prem = critere(p_old, p_new);
+    fprintf(sol_coul_aft, " pertes -> %f\n", prem);
     printf("test6\n");
     fflush(stdout);
 
-    nb_conv(p_new,p_temp, 1,ker2,TAILLEK,16);
+    nb_conv(p_new, p_temp, 1, ker2, TAILLEK, 16);
     eisofhn2Es = fopen(strout2, "w");
     fprintf(eisofhn2Es, "P3\n");
     fprintf(eisofhn2Es, "%d %d\n", width, height);
     fprintf(eisofhn2Es, "255");
     fprintf(eisofhn2Es, "\n");
-    print_canvas2(eisofhn2Es, p_new );
+    print_canvas2(eisofhn2Es, p_new);
     fclose(eisofhn2Es);
     printf("test7\n");
     fflush(stdout);
-    fprintf(final_results,"mat n°%d | r: %f | g: %f | b: %f",i,moyenne_coul_img(p_new->matr,  height,  width),
-    moyenne_coul_img(p_new->matg,  height,  width),moyenne_coul_img(p_new->matb,  height,  width));
-    double sec = critere(p_old,p_new);
-    fprintf(final_results," ,pertes -> %f ,recuperation :%f\n",sec,(prem-sec)/prem);
+    fprintf(final_results, "mat n°%d | r: %f | g: %f | b: %f", i,
+            moyenne_coul_img(p_new->matr, height, width),
+            moyenne_coul_img(p_new->matg, height, width),
+            moyenne_coul_img(p_new->matb, height, width));
+    double sec = critere(p_old, p_new);
+    fprintf(final_results, " ,pertes -> %f ,recuperation :%f\n", sec,
+            (prem - sec) / prem);
     free_pixel(p_new);
     free_pixel(p_old);
     free_pixel(p_temp);
-
-  } 
-  time_t end = time( NULL);
-  fclose (sol_coul);
-  fclose (sol_coul_aft);
+  }
+  time_t end = time(NULL);
+  fclose(sol_coul);
+  fclose(sol_coul_aft);
   fclose(final_results);
-  unsigned long secondes = (unsigned long) difftime( end, begin );
-    printf( "Finished in %ld sec\n", secondes );  
+  unsigned long secondes = (unsigned long)difftime(end, begin);
+  printf("Finished in %ld sec\n", secondes);
   return 0;
 }
