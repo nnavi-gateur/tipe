@@ -17,17 +17,11 @@ pixel *creer_pixel(int width, int height) {
   int **matb = malloc(sizeof(int *) * height);
   int **matr = malloc(sizeof(int *) * height);
   int **matg = malloc(sizeof(int *) * height);
-  int **matb2 = malloc(sizeof(int *) * height);
-  int **matr2 = malloc(sizeof(int *) * height);
-  int **matg2 = malloc(sizeof(int *) * height);
   printf("test2\n");
   for (int i = 0; i < height; i++) {
     matb[i] = malloc(sizeof(int) * width);
     matr[i] = malloc(sizeof(int) * width);
     matg[i] = malloc(sizeof(int) * width);
-    matb2[i] = malloc(sizeof(int) * width);
-    matr2[i] = malloc(sizeof(int) * width);
-    matg2[i] = malloc(sizeof(int) * width);
   }
   p->matr = matr;
   p->matb = matb;
@@ -146,8 +140,7 @@ void test(int **matr, int **matg, int **matb, int height, int width) {
 }
 
 int main() {
-  char vide[256] = "";
-  char str[12];
+  char str[256];
   char strout[256];
   char strout2[256];
   char temp[5];
@@ -162,18 +155,12 @@ int main() {
   final_results = fopen("img_res/val_final", "w");
 
   for (int i = 0; i < 12; i++) {
-    strcpy(strout, vide);
-    strcpy(str, vide);
-    strcat(str, "assets/");
-    strcat(strout, "img_res/");
     sprintf(temp, "%d", i);
-    strcat(strout, temp);
-    strcat(str, temp);
-    strcat(str, ".ppm");
-    strcpy(strout2, strout);
-    strcat(strout, "-out.ppm");
-    strcat(strout2, "-out-final.ppm");
+	sprintf(str, "assets/%s.ppm", temp);
+	sprintf(strout, "img_res/%s-out.ppm", temp);
+	sprintf(strout2, "img_res/%s-out-final.ppm", temp);
     printf("%s\n", strout);
+    printf("%s\n", str);
     fflush(stdout);
     stream = fopen(str, "rwo");
     if (stream == NULL) {
@@ -219,7 +206,7 @@ int main() {
     printf("test6\n");
     fflush(stdout);
 
-    nb_conv(p_new, p_temp, 1, ker2, TAILLEK, 16);
+    nb_conv(p_new, p_temp, 0, ker2, TAILLEK, 16);
     eisofhn2Es = fopen(strout2, "w");
     fprintf(eisofhn2Es, "P3\n");
     fprintf(eisofhn2Es, "%d %d\n", width, height);
@@ -244,6 +231,8 @@ int main() {
   fclose(sol_coul);
   fclose(sol_coul_aft);
   fclose(final_results);
+  free_mat(ker, TAILLEK);
+  free_mat(ker2,  TAILLEK2);
   unsigned long secondes = (unsigned long)difftime(end, begin);
   printf("Finished in %ld sec\n", secondes);
   return 0;
